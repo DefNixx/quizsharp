@@ -1,22 +1,23 @@
 import { SECTIONS } from "../constants";
-import { PS_QUESTIONS, DS_QUESTIONS, CR_QUESTIONS } from "../data/questions";
+import { useI18n } from "../i18n/index";
 
 export default function Home({ learnSections, onNavigate, onStartPractice, onStartSimulado, history = [] }) {
+  const { t, content, locale } = useI18n();
   return (
     <div className="home-container fade-in">
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <h1 className="app-title">
-          QuizSharp
+          {t("app_title")}
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 8 }}>
-          Pratique, aprenda e domine qualquer assunto
+          {t("subtitle")}
         </p>
       </div>
 
       {/* Learn section */}
       <div style={{ marginBottom: 32 }}>
         <h2 style={{ color: "var(--text)", fontSize: 16, fontWeight: 600, marginBottom: 16, letterSpacing: 1 }}>
-          📚 APRENDER
+          {t("learn_icon")} {t("learn")}
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {learnSections.map(ls => (
@@ -27,7 +28,7 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
               <span style={{ fontSize: 28 }}>{ls.icon}</span>
               <div>
                 <div style={{ color: ls.color, fontSize: 15, fontWeight: 700 }}>{ls.title}</div>
-                <div style={{ color: "var(--text-muted)", fontSize: 12, marginTop: 2 }}>Explicação detalhada + estratégias</div>
+                <div style={{ color: "var(--text-muted)", fontSize: 12, marginTop: 2 }}>{t("learn_card_desc")}</div>
               </div>
             </button>
           ))}
@@ -37,13 +38,13 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
       {/* Practice section */}
       <div style={{ marginBottom: 32 }}>
         <h2 style={{ color: "var(--text)", fontSize: 16, fontWeight: 600, marginBottom: 16, letterSpacing: 1 }}>
-          🎯 PRATICAR POR TIPO
+          {t("practice_icon")} {t("practice_by_type")}
         </h2>
         <div className="grid-3">
           {[
-            { s: SECTIONS.PRACTICE_PS, label: "Problem Solving", n: PS_QUESTIONS.length, c: "#00c2ff" },
-            { s: SECTIONS.PRACTICE_DS, label: "Data Sufficiency", n: DS_QUESTIONS.length, c: "#b388ff" },
-            { s: SECTIONS.PRACTICE_CR, label: "Critical Reasoning", n: CR_QUESTIONS.length, c: "#69f0ae" },
+            { s: SECTIONS.PRACTICE_PS, label: t("problem_solving"), n: content.PS_QUESTIONS.length, c: "#00c2ff" },
+            { s: SECTIONS.PRACTICE_DS, label: t("data_sufficiency"), n: content.DS_QUESTIONS.length, c: "#b388ff" },
+            { s: SECTIONS.PRACTICE_CR, label: t("critical_reasoning"), n: content.CR_QUESTIONS.length, c: "#69f0ae" },
           ].map(p => (
             <button key={p.s} onClick={() => onStartPractice(p.s)} className="btn-card" style={{
               padding: "20px 12px", textAlign: "center",
@@ -63,14 +64,14 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
         borderRadius: 14, cursor: "pointer", textAlign: "center",
       }}>
         <div style={{ fontSize: 20, fontWeight: 800, color: "#e8f0f8", letterSpacing: 1 }}>
-          🏆 SIMULADO COMPLETO
+          {t("simulado_icon")} {t("full_simulado")}
         </div>
         <div style={{ color: "#8a9aaa", fontSize: 12, marginTop: 6 }}>
-          15 questões • 2 horas • Cronometrado • Sem gabarito durante
+          {t("simulado_desc")}
         </div>
       </button>
 
-      {/* Histórico */}
+      {/* History */}
       {history.length > 0 && (() => {
         const sorted = [...history];
         const avg = Math.round(sorted.reduce((s, h) => s + h.pct, 0) / sorted.length);
@@ -81,7 +82,7 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
         return (
           <div style={{ marginTop: 32 }}>
             <h2 style={{ color: "var(--text)", fontSize: 16, fontWeight: 600, marginBottom: 16, letterSpacing: 1 }}>
-              📈 HISTÓRICO
+              {t("history_icon")} {t("history")}
             </h2>
 
             {/* Stats cards */}
@@ -91,14 +92,14 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
                 padding: "14px 12px", textAlign: "center",
               }}>
                 <div style={{ color: "#00c2ff", fontSize: 22, fontWeight: 800 }}>{avg}%</div>
-                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>Média</div>
+                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>{t("average")}</div>
               </div>
               <div style={{
                 background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 10,
                 padding: "14px 12px", textAlign: "center",
               }}>
                 <div style={{ color: "#69f0ae", fontSize: 22, fontWeight: 800 }}>{best}%</div>
-                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>Melhor</div>
+                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>{t("best")}</div>
               </div>
               <div style={{
                 background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 10,
@@ -110,7 +111,7 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
                 }}>
                   {trend > 0 ? "↑" : trend < 0 ? "↓" : "→"} {Math.abs(trend)}%
                 </div>
-                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>Tendência</div>
+                <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 2 }}>{t("trend")}</div>
               </div>
             </div>
 
@@ -132,7 +133,7 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
                   ))}
                 </div>
                 <div style={{ color: "var(--text-muted)", fontSize: 10, marginTop: 6, textAlign: "center" }}>
-                  Últimos {Math.min(sorted.length, 10)} simulados
+                  {t("last_n_simulados", { n: Math.min(sorted.length, 10) })}
                 </div>
               </div>
             )}
@@ -145,7 +146,7 @@ export default function Home({ learnSections, onNavigate, onStartPractice, onSta
                   padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center",
                 }}>
                   <span style={{ color: "var(--text-muted)", fontSize: 13 }}>
-                    {new Date(h.date).toLocaleDateString("pt-BR")}
+                    {new Date(h.date).toLocaleDateString(locale)}
                   </span>
                   <span style={{
                     fontSize: 15, fontWeight: 700,

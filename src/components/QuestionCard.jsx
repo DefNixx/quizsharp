@@ -1,8 +1,11 @@
+import { useI18n } from "../i18n/index";
+
 export default function QuestionCard({ question, index, total, selected, onSelect, showResult, type }) {
+  const { t } = useI18n();
   const isCorrect = selected === question.answer;
   const optionLabels = ["A", "B", "C", "D", "E"];
   return (
-    <div className="question-card fade-in" role="region" aria-label={`Questão ${index + 1} de ${total}`}>
+    <div className="question-card fade-in" role="region" aria-label={t("question_x_of_y", { x: index + 1, y: total })}>
       <div style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         marginBottom: 16,
@@ -13,10 +16,10 @@ export default function QuestionCard({ question, index, total, selected, onSelec
           padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 600,
           letterSpacing: 1, textTransform: "uppercase",
         }}>
-          {type === "PS" ? "Problem Solving" : type === "DS" ? "Data Sufficiency" : "Critical Reasoning"}
+          {type === "PS" ? t("problem_solving") : type === "DS" ? t("data_sufficiency") : t("critical_reasoning")}
         </span>
         <span style={{ color: "var(--text-muted)", fontSize: 13 }} aria-hidden="true">
-          Questão {index + 1} de {total}
+          {t("question_x_of_y", { x: index + 1, y: total })}
         </span>
       </div>
       <p style={{
@@ -25,7 +28,7 @@ export default function QuestionCard({ question, index, total, selected, onSelec
       }}>
         {question.q}
       </p>
-      <div role="radiogroup" aria-label="Alternativas" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div role="radiogroup" aria-label={t("alternatives")} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {question.options.map((opt, i) => {
           let bg = "var(--bg-deep)";
           let border = "var(--border)";
@@ -40,7 +43,7 @@ export default function QuestionCard({ question, index, total, selected, onSelec
             <button key={i} onClick={() => !showResult && onSelect(i)}
               className="btn-option" data-locked={showResult ? "true" : "false"}
               role="radio" aria-checked={i === selected}
-              aria-label={`Alternativa ${optionLabels[i]}: ${opt}`}
+              aria-label={t("alternative_label", { label: optionLabels[i], text: opt })}
               aria-disabled={showResult}
               style={{
               display: "flex", alignItems: "flex-start", gap: 12,
@@ -73,7 +76,7 @@ export default function QuestionCard({ question, index, total, selected, onSelec
             fontSize: 13, fontWeight: 700, marginBottom: 8,
             color: isCorrect ? "#69f0ae" : "#ff6666",
           }}>
-            {isCorrect ? "✓ Correto!" : "✗ Incorreto"}
+            {isCorrect ? t("correct") : t("incorrect")}
           </div>
           <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.7, margin: 0 }}>
             {question.explanation}

@@ -1,6 +1,8 @@
 import { SECTIONS } from "../constants";
+import { useI18n } from "../i18n/index";
 
 export default function LearnSection({ learnData, onBack, onStartPractice }) {
+  const { t } = useI18n();
   const prac = learnData.key === SECTIONS.LEARN_PS ? SECTIONS.PRACTICE_PS
     : learnData.key === SECTIONS.LEARN_DS ? SECTIONS.PRACTICE_DS : SECTIONS.PRACTICE_CR;
 
@@ -9,7 +11,7 @@ export default function LearnSection({ learnData, onBack, onStartPractice }) {
       <button onClick={onBack} className="btn-back" style={{
         background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer",
         fontSize: 13, marginBottom: 16, padding: 0,
-      }}>← Voltar</button>
+      }}>{t("back")}</button>
       <h1 style={{ color: learnData.color, fontSize: 28, fontWeight: 800, marginBottom: 24 }}>
         {learnData.icon} {learnData.title}
       </h1>
@@ -31,7 +33,7 @@ export default function LearnSection({ learnData, onBack, onStartPractice }) {
         border: "none", borderRadius: 10, cursor: "pointer",
         fontSize: 14, fontWeight: 700, color: "#0a1628",
       }}>
-        Praticar {learnData.title} →
+        {t("practice_button", { type: learnData.title })}
       </button>
     </div>
   );

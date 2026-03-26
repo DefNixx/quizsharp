@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SECTIONS } from "./constants";
-import { SIMULADO_QUESTIONS, shuffle } from "./data/questions";
-import { learnSections } from "./data/learnContent";
+import { shuffle } from "./data/questions";
+import { useI18n } from "./i18n/index";
 import Home from "./components/Home";
 import LearnSection from "./components/LearnSection";
 import Practice from "./components/Practice";
@@ -18,9 +18,7 @@ function loadState() {
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (typeof data !== "object" || data === null) return null;
-    // Validate section is a known value
     if (data.section && !VALID_SECTIONS.has(data.section)) data.section = SECTIONS.HOME;
-    // Validate simuladoQuestions is an array with expected shape
     if (data.simuladoQuestions && (
       !Array.isArray(data.simuladoQuestions) ||
       data.simuladoQuestions.some(q => !q?.q || !q?.options || q?.answer === undefined)
@@ -30,7 +28,6 @@ function loadState() {
       data.simuladoFinished = false;
       data.section = SECTIONS.HOME;
     }
-    // Validate history is an array
     if (data.history && !Array.isArray(data.history)) data.history = [];
     return data;
   } catch {
@@ -53,8 +50,15 @@ function saveState(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
 }
 
+const LOCALE_OPTIONS = [
+  { code: "pt-BR", label: "PT" },
+  { code: "en", label: "EN" },
+  { code: "es", label: "ES" },
+];
+
 export default function QuizSharp() {
   const saved = loadState();
+  const { t, content, locale, setLocale } = useI18n();
 
   const [section, setSection] = useState(saved?.section || SECTIONS.HOME);
   const [currentQ, setCurrentQ] = useState(Number(saved?.currentQ) || 0);
@@ -67,7 +71,6 @@ export default function QuizSharp() {
   const [theme, setTheme] = useState(loadTheme);
   const containerRef = useRef(null);
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem(THEME_KEY, theme); } catch {}
@@ -75,7 +78,6 @@ export default function QuizSharp() {
 
   const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
-  // Persist state on every change
   useEffect(() => {
     saveState({ section, currentQ, answers, showResult, simuladoQuestions, simuladoAnswers, simuladoFinished, history });
   }, [section, currentQ, answers, showResult, simuladoQuestions, simuladoAnswers, simuladoFinished, history]);
@@ -85,7 +87,7 @@ export default function QuizSharp() {
   };
 
   const startSimulado = () => {
-    setSimuladoQuestions(shuffle(SIMULADO_QUESTIONS));
+    setSimuladoQuestions(shuffle(content.SIMULADO_QUESTIONS));
     setSimuladoAnswers({});
     setCurrentQ(0);
     setSimuladoFinished(false);
@@ -94,7 +96,6 @@ export default function QuizSharp() {
 
   const finishSimulado = useCallback(() => {
     setSimuladoFinished(true);
-    // Save result to history
     const total = simuladoQuestions.length;
     let correct = 0;
     simuladoQuestions.forEach((q, i) => {
@@ -123,7 +124,7 @@ export default function QuizSharp() {
   };
 
   // ─── Router ───
-  const learnMatch = learnSections.find(ls => ls.key === section);
+  const learnMatch = content.learnSections.find(ls => ls.key === section);
   const isPractice = [SECTIONS.PRACTICE_PS, SECTIONS.PRACTICE_DS, SECTIONS.PRACTICE_CR].includes(section);
 
   return (
@@ -134,12 +135,27 @@ export default function QuizSharp() {
       color: "var(--text)",
       overflowY: "auto",
     }}>
-      <button onClick={toggleTheme} className="theme-toggle" aria-label="Alternar tema">
-        {theme === "dark" ? "☀️" : "🌙"}
-      </button>
+      <div className="top-controls">
+        <div className="locale-switcher" role="radiogroup" aria-label={t("language")}>
+          {LOCALE_OPTIONS.map(opt => (
+            <button
+              key={opt.code}
+              onClick={() => setLocale(opt.code)}
+              className={`locale-btn${locale === opt.code ? " locale-btn--active" : ""}`}
+              role="radio"
+              aria-checked={locale === opt.code}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <button onClick={toggleTheme} className="theme-toggle" aria-label={t("toggle_theme")}>
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+      </div>
       {section === SECTIONS.HOME && (
         <Home
-          learnSections={learnSections}
+          learnSections={content.learnSections}
           onNavigate={navigateAndScroll}
           onStartPractice={startPractice}
           onStartSimulado={startSimulado}

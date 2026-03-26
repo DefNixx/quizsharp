@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n/index";
 import Timer from "./Timer";
 import QuestionCard from "./QuestionCard";
 
@@ -5,6 +6,7 @@ export default function Simulado({
   simuladoQuestions, currentQ, simuladoAnswers,
   onSelectAnswer, onSetCurrentQ, onFinish, scrollToTop,
 }) {
+  const { t } = useI18n();
   const q = simuladoQuestions[currentQ];
   if (!q) return null;
   return (
@@ -44,7 +46,7 @@ export default function Simulado({
             <button onClick={onFinish} className="btn-primary" style={{
               padding: "12px 24px", background: "#69f0ae", border: "none",
               borderRadius: 8, color: "#0a1628", cursor: "pointer", fontSize: 13, fontWeight: 700,
-            }}>Finalizar</button>
+            }}>{t("finish")}</button>
           )}
         </div>
       </div>
