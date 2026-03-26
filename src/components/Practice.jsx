@@ -19,7 +19,7 @@ export default function Practice({
   return (
     <div className="section-container fade-in">
       <button onClick={onBack} className="btn-back" style={{
-        background: "none", border: "none", color: "#5a7a9a", cursor: "pointer",
+        background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer",
         fontSize: 13, marginBottom: 16, padding: 0,
       }}>← Voltar</button>
       <QuestionCard
@@ -30,8 +30,8 @@ export default function Practice({
       <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
         {currentQ > 0 && (
           <button onClick={() => { onPrev(); scrollToTop(); }} className="btn-nav" style={{
-            padding: "12px 24px", background: "#1a2a40", border: "1px solid #2a4a60",
-            borderRadius: 8, color: "#b0c8e0", cursor: "pointer", fontSize: 13,
+            padding: "12px 24px", background: "var(--bg-subtle)", border: "1px solid var(--border)",
+            borderRadius: 8, color: "var(--text-secondary)", cursor: "pointer", fontSize: 13,
           }}>← Anterior</button>
         )}
         <div style={{ flex: 1 }} />

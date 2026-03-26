@@ -15,26 +15,26 @@ export default function QuestionCard({ question, index, total, selected, onSelec
         }}>
           {type === "PS" ? "Problem Solving" : type === "DS" ? "Data Sufficiency" : "Critical Reasoning"}
         </span>
-        <span style={{ color: "#5a7a9a", fontSize: 13 }} aria-hidden="true">
+        <span style={{ color: "var(--text-muted)", fontSize: 13 }} aria-hidden="true">
           Questão {index + 1} de {total}
         </span>
       </div>
       <p style={{
-        color: "#e8f0f8", fontSize: 15, lineHeight: 1.7,
+        color: "var(--text)", fontSize: 15, lineHeight: 1.7,
         whiteSpace: "pre-line", marginBottom: 20,
       }}>
         {question.q}
       </p>
       <div role="radiogroup" aria-label="Alternativas" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {question.options.map((opt, i) => {
-          let bg = "#0a1628";
-          let border = "#1a3a5c";
-          let color = "#b0c8e0";
+          let bg = "var(--bg-deep)";
+          let border = "var(--border)";
+          let color = "var(--text-secondary)";
           if (showResult) {
-            if (i === question.answer) { bg = "#0a2e1a"; border = "#00cc66"; color = "#69f0ae"; }
-            else if (i === selected && !isCorrect) { bg = "#2e0a0a"; border = "#cc3333"; color = "#ff6666"; }
+            if (i === question.answer) { bg = "var(--correct-bg)"; border = "#00cc66"; color = "#69f0ae"; }
+            else if (i === selected && !isCorrect) { bg = "var(--incorrect-bg)"; border = "#cc3333"; color = "#ff6666"; }
           } else if (i === selected) {
-            bg = "#0a2a4e"; border = "#00c2ff"; color = "#e8f0f8";
+            bg = "#0a2a4e"; border = "#00c2ff"; color = "var(--text)";
           }
           return (
             <button key={i} onClick={() => !showResult && onSelect(i)}
@@ -52,8 +52,8 @@ export default function QuestionCard({ question, index, total, selected, onSelec
               <span aria-hidden="true" style={{
                 fontWeight: 700, fontSize: 13, minWidth: 24, height: 24,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                borderRadius: 6, background: i === selected ? (showResult ? (i === question.answer ? "#00cc66" : "#cc3333") : "#00c2ff") : "#1a2a40",
-                color: i === selected ? "#fff" : "#5a7a9a",
+                borderRadius: 6, background: i === selected ? (showResult ? (i === question.answer ? "#00cc66" : "#cc3333") : "#00c2ff") : "var(--bg-subtle)",
+                color: i === selected ? "#fff" : "var(--text-muted)",
                 flexShrink: 0, marginTop: 1,
               }}>
                 {optionLabels[i]}
@@ -66,8 +66,8 @@ export default function QuestionCard({ question, index, total, selected, onSelec
       {showResult && (
         <div role="alert" style={{
           marginTop: 16, padding: 16, borderRadius: 10,
-          background: isCorrect ? "#0a2e1a" : "#1a0a0a",
-          border: `1px solid ${isCorrect ? "#1a4a2a" : "#3a1a1a"}`,
+          background: isCorrect ? "var(--correct-bg)" : "var(--incorrect-bg)",
+          border: `1px solid ${isCorrect ? "var(--correct-border)" : "var(--incorrect-border)"}`,
         }}>
           <div style={{
             fontSize: 13, fontWeight: 700, marginBottom: 8,
@@ -75,7 +75,7 @@ export default function QuestionCard({ question, index, total, selected, onSelec
           }}>
             {isCorrect ? "✓ Correto!" : "✗ Incorreto"}
           </div>
-          <p style={{ color: "#b0c8e0", fontSize: 13, lineHeight: 1.7, margin: 0 }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.7, margin: 0 }}>
             {question.explanation}
           </p>
         </div>

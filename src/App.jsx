@@ -39,6 +39,16 @@ function loadState() {
   }
 }
 
+const THEME_KEY = "quizsharp-theme";
+
+function loadTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "light" || saved === "dark") return saved;
+  } catch {}
+  return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
 function saveState(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
 }
@@ -54,7 +64,16 @@ export default function QuizSharp() {
   const [simuladoAnswers, setSimuladoAnswers] = useState(saved?.simuladoAnswers || {});
   const [simuladoFinished, setSimuladoFinished] = useState(saved?.simuladoFinished === true);
   const [history, setHistory] = useState(saved?.history || []);
+  const [theme, setTheme] = useState(loadTheme);
   const containerRef = useRef(null);
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch {}
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   // Persist state on every change
   useEffect(() => {
@@ -110,11 +129,14 @@ export default function QuizSharp() {
   return (
     <div ref={containerRef} style={{
       minHeight: "100vh",
-      background: "#070f1c",
+      background: "var(--bg-page)",
       fontFamily: "'Segoe UI', 'SF Pro Display', -apple-system, sans-serif",
-      color: "#e8f0f8",
+      color: "var(--text)",
       overflowY: "auto",
     }}>
+      <button onClick={toggleTheme} className="theme-toggle" aria-label="Alternar tema">
+        {theme === "dark" ? "☀️" : "🌙"}
+      </button>
       {section === SECTIONS.HOME && (
         <Home
           learnSections={learnSections}

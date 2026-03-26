@@ -20,8 +20,8 @@ export default function Simulado({
         <div style={{ display: "flex", gap: 10, justifyContent: "space-between", alignItems: "center" }}>
           {currentQ > 0 ? (
             <button onClick={() => { onSetCurrentQ(currentQ - 1); scrollToTop(); }} className="btn-nav" style={{
-              padding: "12px 24px", background: "#1a2a40", border: "1px solid #2a4a60",
-              borderRadius: 8, color: "#b0c8e0", cursor: "pointer", fontSize: 13,
+              padding: "12px 24px", background: "var(--bg-subtle)", border: "1px solid var(--border)",
+              borderRadius: 8, color: "var(--text-secondary)", cursor: "pointer", fontSize: 13,
             }}>←</button>
           ) : <div />}
           {/* Question dots */}
@@ -30,15 +30,15 @@ export default function Simulado({
               <button key={i} onClick={() => { onSetCurrentQ(i); scrollToTop(); }} className="btn-nav" style={{
                 width: 28, height: 28, borderRadius: 6, border: "none", cursor: "pointer",
                 fontSize: 11, fontWeight: 600,
-                background: i === currentQ ? "#00c2ff" : simuladoAnswers[i] !== undefined ? "#1a4a2a" : "#1a2a40",
-                color: i === currentQ ? "#0a1628" : simuladoAnswers[i] !== undefined ? "#69f0ae" : "#5a7a9a",
+                background: i === currentQ ? "#00c2ff" : simuladoAnswers[i] !== undefined ? "#1a4a2a" : "var(--bg-subtle)",
+                color: i === currentQ ? "#0a1628" : simuladoAnswers[i] !== undefined ? "#69f0ae" : "var(--text-muted)",
               }}>{i + 1}</button>
             ))}
           </div>
           {currentQ < simuladoQuestions.length - 1 ? (
             <button onClick={() => { onSetCurrentQ(currentQ + 1); scrollToTop(); }} className="btn-nav" style={{
-              padding: "12px 24px", background: "#1a2a40", border: "1px solid #2a4a60",
-              borderRadius: 8, color: "#b0c8e0", cursor: "pointer", fontSize: 13,
+              padding: "12px 24px", background: "var(--bg-subtle)", border: "1px solid var(--border)",
+              borderRadius: 8, color: "var(--text-secondary)", cursor: "pointer", fontSize: 13,
             }}>→</button>
           ) : (
             <button onClick={onFinish} className="btn-primary" style={{

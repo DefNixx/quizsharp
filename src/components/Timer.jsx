@@ -16,11 +16,11 @@ export default function Timer({ seconds, onEnd }) {
   return (
     <div role="timer" aria-label={`Tempo restante: ${timeLabel}`} style={{
       position: "sticky", top: 0, zIndex: 100,
-      background: urgent ? "#2d0a0a" : "#0a1628",
-      borderBottom: `2px solid ${urgent ? "#ff4444" : "#1a3a5c"}`,
+      background: urgent ? "var(--timer-urgent-bg)" : "var(--timer-bg)",
+      borderBottom: `2px solid ${urgent ? "#ff4444" : "var(--border)"}`,
       padding: "12px 20px", display: "flex", alignItems: "center", gap: 16,
     }}>
-      <div style={{ flex: 1, height: 6, borderRadius: 3, background: "#1a2a40" }}>
+      <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--bg-subtle)" }}>
         <div style={{
           height: "100%", borderRadius: 3,
           width: `${pct}%`,

@@ -1,4 +1,5 @@
 import QuestionCard from "./QuestionCard";
+import Confetti from "./Confetti";
 
 export default function Results({ simuladoQuestions, simuladoAnswers, onBack }) {
   const total = simuladoQuestions.length;
@@ -11,6 +12,7 @@ export default function Results({ simuladoQuestions, simuladoAnswers, onBack }) 
   const pct = Math.round((correct / total) * 100);
   return (
     <div className="home-container fade-in">
+      {pct >= 70 && <Confetti />}
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <div className="score-number" style={{
           background: pct >= 70 ? "linear-gradient(135deg, #69f0ae, #00c2ff)" : pct >= 40 ? "linear-gradient(135deg, #ffab40, #ffd740)" : "linear-gradient(135deg, #ff5252, #ff8a80)",
@@ -18,7 +20,7 @@ export default function Results({ simuladoQuestions, simuladoAnswers, onBack }) 
         }}>
           {pct}%
         </div>
-        <div style={{ color: "#b0c8e0", fontSize: 16 }}>{correct} de {total} corretas</div>
+        <div style={{ color: "var(--text-secondary)", fontSize: 16 }}>{correct} de {total} corretas</div>
       </div>
       <div className="grid-3-results">
         {[
@@ -27,18 +29,18 @@ export default function Results({ simuladoQuestions, simuladoAnswers, onBack }) 
           { label: "Critical Reasoning", d: byType.CR, c: "#69f0ae" },
         ].map(t => (
           <div key={t.label} style={{
-            background: "#0d1f35", borderRadius: 12, padding: 16,
-            textAlign: "center", border: "1px solid #1a3a5c",
+            background: "var(--bg-card)", borderRadius: 12, padding: 16,
+            textAlign: "center", border: "1px solid var(--border)",
           }}>
             <div style={{ color: t.c, fontSize: 24, fontWeight: 800 }}>
               {t.d.correct}/{t.d.total}
             </div>
-            <div style={{ color: "#5a7a9a", fontSize: 11, marginTop: 4 }}>{t.label}</div>
+            <div style={{ color: "var(--text-muted)", fontSize: 11, marginTop: 4 }}>{t.label}</div>
           </div>
         ))}
       </div>
       {/* Show all questions with answers */}
-      <h3 style={{ color: "#e8f0f8", fontSize: 16, marginBottom: 16 }}>Gabarito detalhado</h3>
+      <h3 style={{ color: "var(--text)", fontSize: 16, marginBottom: 16 }}>Gabarito detalhado</h3>
       {simuladoQuestions.map((q, i) => (
         <QuestionCard
           key={i} question={q} index={i} total={total}

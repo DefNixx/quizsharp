@@ -7,7 +7,7 @@ export default function LearnSection({ learnData, onBack, onStartPractice }) {
   return (
     <div className="section-container fade-in">
       <button onClick={onBack} className="btn-back" style={{
-        background: "none", border: "none", color: "#5a7a9a", cursor: "pointer",
+        background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer",
         fontSize: 13, marginBottom: 16, padding: 0,
       }}>← Voltar</button>
       <h1 style={{ color: learnData.color, fontSize: 28, fontWeight: 800, marginBottom: 24 }}>
@@ -15,13 +15,13 @@ export default function LearnSection({ learnData, onBack, onStartPractice }) {
       </h1>
       {learnData.content.map((c, i) => (
         <div key={i} style={{
-          background: "#0d1f35", borderRadius: 14, padding: "20px 22px",
-          marginBottom: 12, border: "1px solid #1a3a5c",
+          background: "var(--bg-card)", borderRadius: 14, padding: "20px 22px",
+          marginBottom: 12, border: "1px solid var(--border)",
         }}>
           <h3 style={{ color: learnData.color, fontSize: 15, fontWeight: 700, marginTop: 0, marginBottom: 10 }}>
             {c.h}
           </h3>
-          <p style={{ color: "#b0c8e0", fontSize: 14, lineHeight: 1.8, margin: 0, whiteSpace: "pre-line" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: 14, lineHeight: 1.8, margin: 0, whiteSpace: "pre-line" }}>
             {c.p}
           </p>
         </div>
