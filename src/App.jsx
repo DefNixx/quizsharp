@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SECTIONS } from "./constants";
-import { shuffle } from "./data/questions";
 import { useI18n } from "./i18n/index";
 import Home from "./components/Home";
 import LearnSection from "./components/LearnSection";
@@ -87,7 +86,7 @@ export default function QuizSharp() {
   };
 
   const startSimulado = () => {
-    setSimuladoQuestions(shuffle(content.SIMULADO_QUESTIONS));
+    setSimuladoQuestions(content.buildSimulado());
     setSimuladoAnswers({});
     setCurrentQ(0);
     setSimuladoFinished(false);

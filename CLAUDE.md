@@ -16,15 +16,51 @@ There is no test runner, linter, or formatter configured.
 
 ## Architecture
 
-This is a React 18 + Vite 6 single-page application for GMAT exam preparation, written in Portuguese (pt-BR). All UI text is in Portuguese.
+React 18 + Vite 6 SPA for GMAT-style quiz preparation. Supports 3 languages (PT-BR, EN, ES) via custom i18n system.
 
-### Single-component design
+### File structure
 
-The entire application lives in `src/App.jsx` (~738 lines). It contains:
-- **Question banks** as hardcoded arrays: `PS_QUESTIONS` (8), `DS_QUESTIONS` (6), `CR_QUESTIONS` (6), `SIMULADO_QUESTIONS` (15 mixed)
-- **Navigation** via a `SECTIONS` enum and `useState` — no router library
-- **Two sub-components** defined inline: `Timer` (countdown for simulado) and `QuestionCard` (question display with answer feedback)
-- **`GMATPrep`** as the main exported component handling section routing and state
+```
+src/
+├── App.jsx                    # Root component: routing, state, localStorage persistence
+├── main.jsx                   # Entry point, wraps App with I18nProvider
+├── constants.js               # SECTIONS enum (navigation keys)
+├── index.css                  # Global styles, theme variables, responsive breakpoints
+├── components/
+│   ├── Home.jsx               # Landing page: learn cards, practice grid, simulado button, history
+│   ├── LearnSection.jsx       # Educational content page per question type
+│   ├── Practice.jsx           # Practice mode: sequential questions with answer reveal
+│   ├── Simulado.jsx           # Full quiz mode: timed, no answer key during
+│   ├── Results.jsx            # Post-quiz results: score, breakdown by type, detailed answers
+│   ├── QuestionCard.jsx       # Question display with options, feedback, explanation
+│   ├── Timer.jsx              # Countdown timer (2h for simulado)
+│   └── Confetti.jsx           # Celebration animation for high scores
+├── data/
+│   ├── questions.js           # PT-BR question banks + shuffle utility
+│   └── learnContent.js        # PT-BR learn section content
+└── i18n/
+    ├── I18nContext.jsx         # React Context provider, useI18n() hook, t() with interpolation
+    ├── index.js                # Locale aggregator, re-exports I18nProvider + useI18n
+    └── locales/
+        ├── pt-BR/
+        │   ├── ui.js           # UI strings in Portuguese
+        │   └── content.js      # Re-exports from data/ (PT-BR is the source of truth)
+        ├── en/
+        │   ├── ui.js           # UI strings in English
+        │   └── content.js      # Translated questions + learn content
+        └── es/
+            ├── ui.js           # UI strings in Spanish
+            └── content.js      # Translated questions + learn content
+```
+
+### i18n system
+
+Custom React Context — no external library. `useI18n()` exposes:
+- `t(key, params?)` — translates UI strings with `{{param}}` interpolation, falls back to key
+- `content` — locale-specific question banks and learn sections
+- `locale` / `setLocale` — current locale and setter
+
+Locale is auto-detected from `navigator.language` and persisted in `localStorage` as `quizsharp-locale`.
 
 ### Question object shape
 
@@ -32,14 +68,24 @@ The entire application lives in `src/App.jsx` (~738 lines). It contains:
 { q: string, options: string[5], answer: number, explanation: string, type?: "PS"|"DS"|"CR" }
 ```
 
+Question banks: PS (8 questions), DS (6), CR (6). Simulado draws 15 (5+5+5 mix, shuffled).
+
+### Navigation
+
+`SECTIONS` enum + `useState` — no router library. Sections: home, learn_ps/ds/cr, practice_ps/ds/cr, simulado, results.
+
 ### Styling
 
-CSS-in-JS with inline styles throughout `App.jsx`. Global base styles (dark theme, scrollbar, selection) are in `src/index.css`. Color scheme per question type: PS=cyan `#00c2ff`, DS=purple `#b388ff`, CR=green `#69f0ae`.
+Inline styles (CSS-in-JS) in components + global CSS in `src/index.css`. Dark/light theme via CSS custom properties on `[data-theme]`. Color scheme per type: PS=cyan `#00c2ff`, DS=purple `#b388ff`, CR=green `#69f0ae`.
+
+### State persistence
+
+All app state (current section, answers, simulado progress, history) is persisted in `localStorage` under key `quizsharp`. Theme under `quizsharp-theme`. Locale under `quizsharp-locale`.
 
 ### Deployment
 
-GitHub Pages at base path `/gmat-prep/` (set in `vite.config.js`). Adjust if repo name differs.
+GitHub Pages at base path `/quizsharp/` (set in `vite.config.js`).
 
 ### No backend
 
-All data is client-side. No API calls, no database, no auth, no persistence between sessions.
+All data is client-side. No API calls, no database, no auth.
